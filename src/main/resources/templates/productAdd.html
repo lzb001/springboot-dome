@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+
+<script th:src="@{/jquery.min.js}" src="../static/jquery.min.js"></script>
+<script>
+    function addproducts() {
+        $.ajax({
+            type: "POST",//提交方式
+            url: "/product/Addproduct",//提交地址 
+            data:$("#fid").serialize(),
+            success: function(){
+                location.href="/product/queryp"
+            }
+        })
+    }
+    $(function () {
+        $("#upload").click(function () {
+            $("#imgWait").show();
+            var formData = new FormData();
+            formData.append("myfile", document.getElementById("file1").files[0]);
+            $.ajax({
+                url: "/product/uploadPhotoFile",
+                type: "POST",
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (data) {
+                    $("#imgWait").prop("src",data)
+                    $("#img").val(data);
+                }
+            });
+        });
+    });
+</script>
+<body>
+<form method="post" id="fid">
+
+    <img width="50px" height="80px" id="imgWait" />
+    选择文件:<input type="file" id="file1" /><br/>
+    <input type="button" id="upload" value="上传"/>
+    <br><br>
+    <input type="hidden" name="productno" th:value="${product.productno}">
+商品名称：<input name="productname" th:value="${product.productname}"><br><br>
+商品价格：<input name="productprice" th:value="${product.productprice}"><br><br>
+上架时间：<input name="grounddate" th:value="${#dates.format(product.grounddate, 'yyyy-MM-dd')}"><br><br>
+图片上传：<input name="imagepath" id="img" th:value="${product.imagepath}"><br><br>
+<input type="button" value="保存" th:onclick="'addproducts()'">
+<input type="button" value="重置">
+<input type="button" value="返回">
+</form>
+
+</body>
+</html>

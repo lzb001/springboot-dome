@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<script th:src="@{/jquery.min.js}" src="../static/jquery.min.js"></script>
+
+<script type="text/javascript">
+    function addproduct() {
+        location.href="/product/productAdd";
+    }
+    function deleteproduct(id) {
+        $.ajax({
+            type:"post",
+            data:{"id":id},
+            url:"/product/deleteproduct",
+        })
+    }
+    function updateproduct(id) {
+        location.href="/product/updateproduct?id="+id;
+    }
+
+</script>
+<body>
+<input type="button" value="添加" th:onclick="'addproduct()'">
+<table border="1">
+    <tr>
+        <td>商品编号</td>
+        <td>商品名称</td>
+        <td>商品价格</td>
+        <td>上级时间</td>
+        <td>图片展示</td>
+        <td>关注人数</td>
+        <td>操作</td>
+    </tr>
+    <tr  th:each="collect,iterStat : ${list}">
+        <th  th:text="${collect.productno}">1</th>
+        <td th:text="${collect.productname}">Mark</td>
+        <td th:text="${collect.productprice}">Otto</td>
+        <td th:text="${#dates.format(collect.grounddate, 'yyyy-MM-dd')}">@mdo</td>
+        <td >
+            <img  th:src="${collect.imagepath}"/>
+        </td>
+        <th th:text="${collect.attentionnumber}">1</th>
+        <td>
+            <input type="button" value="删除" th:onclick="|deleteproduct(${collect.productno})|">
+            <input type="button" value="修改" th:onclick="|updateproduct(${collect.productno})|">
+        </td>
+    </tr>
+</table>
+
+</body>
+</html>
